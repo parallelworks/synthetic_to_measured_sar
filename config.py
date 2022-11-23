@@ -36,7 +36,6 @@ config = Config(
             worker_debug = True,             # Default False for shorter logs
             cores_per_worker = float(exec_conf['controller']['CORES_PER_WORKER']), # One worker per node
             worker_logdir_root = exec_conf['controller']['WORKER_LOGDIR_ROOT'],  #os.getcwd() + '/parsllogs',
-            address = exec_conf['controller']['ADDRESS'],
             provider = LocalProvider(
                 worker_init = 'source {conda_sh}; conda activate {conda_env}; cd {run_dir}'.format(
                     conda_sh = os.path.join(exec_conf['controller']['CONDA_DIR'], 'etc/profile.d/conda.sh'),
