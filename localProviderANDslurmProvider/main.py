@@ -16,7 +16,7 @@ import parsl_utils
 # - https://github.com/inkawhich/synthetic-to-measured-sar
 
 @parsl_utils.parsl_wrappers.log_app
-@bash_app(executors=['compute_partition'])
+@bash_app(executors=['controller'])
 def prepare_rundir(run_dir, data_repo_dir="./SAMPLE_Public_Dist_A", stdout= 'std.out', stderr = 'std.err'):
     return '''
         cd {run_dir}
@@ -306,7 +306,7 @@ if __name__ == '__main__':
     print("Preparing Run Directory")
     print("**********************************************************")
     prepare_rundir_fut = prepare_rundir(
-        exec_conf['compute_partition']['RUN_DIR'],
+        exec_conf['controller']['RUN_DIR'],
         data_repo_dir = data_repo_dir,
         stdout = 'prepare_rundir_fut.out',
         stderr = 'prepare_rundir_fut.err'
