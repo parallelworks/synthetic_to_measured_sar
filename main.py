@@ -347,7 +347,7 @@ if __name__ == '__main__':
             )
         )
 
-    for FUT in ACCUMULATED_ACCURACIES_FUTS:
+    for ITER,FUT in enumerate(ACCUMULATED_ACCURACIES_FUTS):
         print("**********************************************************")
         print("Waiting Iter: {} / {} for K = {}".format(ITER, REPEAT_ITERS, K))
         print("**********************************************************")
