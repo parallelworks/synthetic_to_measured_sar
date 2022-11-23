@@ -1,0 +1,3 @@
+[submodule "parsl_utils"]
+	path = parsl_utils
+	url = parallelworks-parsl_utils:parallelworks/parsl_utils.git

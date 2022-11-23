@@ -1,0 +1,30 @@
+{
+    "controller": {
+        "POOL": "gcpslurmv2dev",
+        "RUN_DIR": "__POOLWORKDIR__/pw/jobs/__job_number__",
+        "CONDA_ENV": "sar-atr-cpu-parsl",
+        "CONDA_DIR": "/contrib/__USER__/pw/miniconda",
+        "WORKER_LOGDIR_ROOT": "__POOLWORKDIR__/parsl/worker_logdir_root",
+        "SSH_CHANNEL_SCRIPT_DIR": "__POOLWORKDIR__/pw/jobs/__job_number__/ssh_channel_script_dir",
+        "CORES_PER_WORKER": 1,
+        "INSTALL_CONDA": "false",
+        "LOCAL_CONDA_YAML": "./requirements/sar-atr-cpu-parsl.yaml"
+    },
+    "compute_partition": {
+        "POOL": "gcpslurmv2dev",
+        "RUN_DIR": "__POOLWORKDIR__/pw/jobs/__job_number__",
+        "NODES_PER_BLOCK": 1,
+        "PARTITION": "compute",
+        "NTASKS_PER_NODE": 1,
+        "MIN_BLOCKS": 0,
+        "MAX_BLOCKS": 10,
+        "WALLTIME": "08:00:00",
+        "CONDA_ENV": "sar-atr-cpu-parsl",
+        "CONDA_DIR": "/contrib/__USER__/pw/miniconda",
+        "WORKER_LOGDIR_ROOT": "__POOLWORKDIR__/parsl/worker_logdir_root",
+        "SSH_CHANNEL_SCRIPT_DIR": "__POOLWORKDIR__/pw/jobs/__job_number__/ssh_channel_script_dir",
+        "CORES_PER_WORKER": 1,
+        "INSTALL_CONDA": "false",
+        "LOCAL_CONDA_YAML": "./requirements/sar-atr-cpu-parsl.yaml"
+    }
+}

@@ -1,0 +1,45 @@
+<tool id='alvaro_singlecluster_parsl_demo' name='alvaro_singlecluster_parsl_demo'>
+  <command interpreter='bash'>parsl_wrapper.sh</command>
+  <inputs>
+    <section name='inputs' type='section' title='Inputs' expanded='true'>
+        <param name='REPEAT_ITERS' label='Number of Iterations:' type='integer' min="2" max="200" help='Model is trained multiple time to compute statistics' value='100' width='25%'>
+        </param>
+        <param name='K' label='K' type='text' help='Proportion of real data [0,1] where 0 is all synthetic and 1 is all real' value='0' width='25%'>
+        </param>
+        <param name='DSIZE' label='DSIZE' type='text' value='64' width='25%'>
+        </param>
+        <param name='num_epochs' label='Number of Epochs' type='text' value='60' width='25%'>
+        </param>
+        <param name='batch_size' label='Batch Size' type='text' value='128' width='25%'>
+        </param>
+        <param name='learning_rate_decay_schedule' label='Learning Rate Decay Schedule' type='text' value='61' help='To specify a list use --- as in 61---51' width='25%'>
+        </param>
+        <param name='learning_rate' label='Learning Rate' type='text' value='0.001'  width='25%'>
+        </param>
+        <param name='gamma' label='Gamma' type='text' value='0.1'  width='25%'>
+        </param>
+        <param name='weight_decay' label='Weight Decay' type='text' value='0.'  width='25%'>
+        </param>
+        <param name='dropout' label='Dropout' type='text' value='0.4'  width='25%'>
+        </param>
+        <param name='gaussian_std' label='Gaussian Std' type='text' value='0.4'  width='25%'>
+        </param>
+        <param name='uniform_range' label='Uniform Range' type='text' value='0.'  width='25%'>
+        </param>
+        <param name='simClutter' label='SimClutter' type='text' value='0.'  width='25%'>
+        </param>
+        <param name='flipProb' label='Flip Prob' type='text' value='0.'  width='25%'>
+        </param>
+        <param name='degrees' label='Degrees' type='text' value='0'  width='25%'>
+        </param>
+        <param name='LBLSMOOTHING_PARAM' label='LBL Smoothing Parameter' type='text' value='0.1'  width='25%'>
+        </param>
+        <param name='MIXUP_ALPHA' label='Mixup Alpha' type='text' value='0.1'  width='25%'>
+        </param>
+        <param name='data_repo_dir' label='Directory of the Data Repository' type='text' value='./SAMPLE_Public_Dist_A' help='https://github.com/benjaminlewis-afrl/SAMPLE_dataset_public' width='25%'>
+        </param>
+    </section>
+  </inputs>
+  <outputs>
+  </outputs>
+</tool>
