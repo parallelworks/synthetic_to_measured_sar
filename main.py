@@ -20,6 +20,7 @@ import parsl_utils
 def prepare_rundir(run_dir, data_repo_dir="./SAMPLE_Public_Dist_A", stdout= 'std.out', stderr = 'std.err'):
     return '''
         cd {run_dir}
+        rm -rf clone
         git clone https://github.com/inkawhich/synthetic-to-measured-sar.git clone
         mv clone/* .
         if ! [ -d "{data_repo_dir}" ]; then
