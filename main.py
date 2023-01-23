@@ -6,8 +6,6 @@ import parsl
 print(parsl.__version__, flush = True)
 from parsl.app.app import python_app, bash_app
 
-from config import config,exec_conf
-
 import numpy as np
 
 import parsl_utils
