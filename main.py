@@ -70,7 +70,7 @@ if __name__ == '__main__':
         )
 
 
-    merge_fut = merge(inputs = ACCUMULATED_ACCURACIES_FUTS)
+    merge_fut = merge(REPEAT_ITERS, inputs = ACCUMULATED_ACCURACIES_FUTS)
     ACCUMULATED_ACCURACIES, minacc, maxacc, avgacc, stdacc, lenacc = merge_fut.result()
 
     print("\n\nEND OF TRAINING!")
