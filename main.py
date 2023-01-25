@@ -1,6 +1,5 @@
 import sys, os, json, time
 from random import randint
-import argparse
 
 import parsl
 print(parsl.__version__, flush = True)
