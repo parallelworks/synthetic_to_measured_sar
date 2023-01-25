@@ -1,5 +1,6 @@
 import sys, os, json, time
 from random import randint
+import argparse
 
 import parsl
 print(parsl.__version__, flush = True)
@@ -18,7 +19,7 @@ if __name__ == '__main__':
     REPEAT_ITERS = int(pwargs['REPEAT_ITERS'])
     K = float(pwargs['K'])
 
-    data_repo_dir = "./SAMPLE_Public_Dist_A"
+    data_repo_dir = pwargs['data_repo_dir']
     dataset_root = os.path.join(data_repo_dir, "png_images/qpm")
 
     print('Loading Parsl Config', flush = True)
