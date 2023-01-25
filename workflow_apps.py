@@ -274,7 +274,7 @@ def train(ITER, K=0.0, dataset_root="./SAMPLE_Public_Dist_A/png_images/qpm", DSI
 
 @parsl_utils.parsl_wrappers.log_app
 @python_app(executors=['compute_partition'])
-def merge(REPEAT_ITERS, inputs = []):
+def merge(K, REPEAT_ITERS, inputs = []):
     import numpy as np
 
     ACCUMULATED_ACCURACIES_FUTS = inputs
