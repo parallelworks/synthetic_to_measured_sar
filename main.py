@@ -47,7 +47,6 @@ if __name__ == '__main__':
         stdout = 'prepare_rundir_fut.out',
         stderr = 'prepare_rundir_fut.err'
     )
-    prepare_rundir_fut.result()
 
     ACCUMULATED_ACCURACIES = []
     ACCUMULATED_ACCURACIES_FUTS = []
@@ -79,7 +78,8 @@ if __name__ == '__main__':
                 LBLSMOOTHING_PARAM = float(args['LBLSMOOTHING_PARAM']),
                 MIXUP_ALPHA = float(args['MIXUP_ALPHA']),
                 dataset_root = dataset_root,
-                std = 'std-{}.out'.format(ITER)
+                std = 'std-{}.out'.format(ITER),
+                inputs = [prepare_rundir_fut]
             )
         )
 
