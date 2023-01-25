@@ -9,28 +9,15 @@ from parsl.app.app import python_app, bash_app
 import numpy as np
 
 import parsl_utils
-from parsl_utils.config import config, exec_conf
+from parsl_utils.config import config, exec_conf, pwargs, job_number
 from parsl_utils.data_provider import PWFile
 
 
 from workflow_apps import prepare_rundir, train
 
-
-def read_args():
-    parser=argparse.ArgumentParser()
-    parsed, unknown = parser.parse_known_args()
-    for arg in unknown:
-        if arg.startswith(("-", "--")):
-            parser.add_argument(arg)
-    pwargs=vars(parser.parse_args())
-    print(pwargs)
-    return pwargs
-
 if __name__ == '__main__':
-    args = read_args()
-    job_number = args['job_number']
-    REPEAT_ITERS = int(args['REPEAT_ITERS'])
-    K = float(args['K'])
+    REPEAT_ITERS = int(pwargs['REPEAT_ITERS'])
+    K = float(pwargs['K'])
 
     data_repo_dir = "./SAMPLE_Public_Dist_A"
     dataset_root = os.path.join(data_repo_dir, "png_images/qpm")
@@ -62,21 +49,21 @@ if __name__ == '__main__':
             train(
                 ITER,
                 K = K,
-                DSIZE = int(args['DSIZE']),
-                num_epochs = int(args['num_epochs']),
-                batch_size = int(args['batch_size']),
-                learning_rate_decay_schedule = [ int(lr) for lr in args['learning_rate_decay_schedule'].split('---') ],
-                learning_rate = float(args['learning_rate']),
-                gamma = float(args['gamma']),
-                weight_decay = float(args['weight_decay']),
-                dropout = float(args['dropout']),
-                gaussian_std = float(args['gaussian_std']),
-                uniform_range = float(args['uniform_range']),
-                simClutter = float(args['simClutter']),
-                flipProb = float(args['flipProb']),
-                degrees = int(args['degrees']),
-                LBLSMOOTHING_PARAM = float(args['LBLSMOOTHING_PARAM']),
-                MIXUP_ALPHA = float(args['MIXUP_ALPHA']),
+                DSIZE = int(pwargs['DSIZE']),
+                num_epochs = int(pwargs['num_epochs']),
+                batch_size = int(pwargs['batch_size']),
+                learning_rate_decay_schedule = [ int(lr) for lr in pwargs['learning_rate_decay_schedule'].split('---') ],
+                learning_rate = float(pwargs['learning_rate']),
+                gamma = float(pwargs['gamma']),
+                weight_decay = float(pwargs['weight_decay']),
+                dropout = float(pwargs['dropout']),
+                gaussian_std = float(pwargs['gaussian_std']),
+                uniform_range = float(pwargs['uniform_range']),
+                simClutter = float(pwargs['simClutter']),
+                flipProb = float(pwargs['flipProb']),
+                degrees = int(pwargs['degrees']),
+                LBLSMOOTHING_PARAM = float(pwargs['LBLSMOOTHING_PARAM']),
+                MIXUP_ALPHA = float(pwargs['MIXUP_ALPHA']),
                 dataset_root = dataset_root,
                 std = 'std-{}.out'.format(ITER),
                 inputs = [prepare_rundir_fut]

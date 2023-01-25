@@ -36,7 +36,7 @@
         </param>
         <param name='MIXUP_ALPHA' label='Mixup Alpha' type='text' value='0.1'  width='25%'>
         </param>
-        <param name='data_repo_dir' label='Directory of the Data Repository' type='text' value='./SAMPLE_Public_Dist_A' help='https://github.com/benjaminlewis-afrl/SAMPLE_dataset_public' width='25%'>
+        <param name='data_repo_dir' label='Directory of the Data Repository' type='text' value='/contrib/__PW_USER__/SAMPLE_Public_Dist_A' help='https://github.com/benjaminlewis-afrl/SAMPLE_dataset_public' width='25%'>
         </param>
     </section>
   </inputs>
