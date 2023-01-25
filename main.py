@@ -13,7 +13,7 @@ from parsl_utils.config import config, exec_conf, pwargs, job_number
 from parsl_utils.data_provider import PWFile
 
 
-from workflow_apps import prepare_rundir, train
+from workflow_apps import prepare_rundir, train, merge
 
 if __name__ == '__main__':
     REPEAT_ITERS = int(pwargs['REPEAT_ITERS'])
@@ -35,7 +35,6 @@ if __name__ == '__main__':
         stderr = 'prepare_rundir_fut.err'
     )
 
-    ACCUMULATED_ACCURACIES = []
     ACCUMULATED_ACCURACIES_FUTS = []
     print("\n\n**********************************************************")
     print("Loop Over Training Runs to Get Average Accuracies")
@@ -70,20 +69,14 @@ if __name__ == '__main__':
             )
         )
 
-    for ITER,FUT in enumerate(ACCUMULATED_ACCURACIES_FUTS):
-        print("**********************************************************")
-        print("Waiting Iter: {} / {} for K = {}".format(ITER, REPEAT_ITERS, K))
-        print("**********************************************************")
-        RESULT = FUT.result()
-        print(RESULT)
-        if RESULT:
-            ACCUMULATED_ACCURACIES.append(RESULT)
 
+    merge_fut = merge(inputs = ACCUMULATED_ACCURACIES_FUTS)
+    ACCUMULATED_ACCURACIES, minacc, maxacc, avgacc, stdacc, lenacc = merge_fut.result()
 
     print("\n\nEND OF TRAINING!")
     print("ACCUMULATED ACCURACIES: ", ACCUMULATED_ACCURACIES)
-    print("\tMin = ", np.array(ACCUMULATED_ACCURACIES).min())
-    print("\tMax = ", np.array(ACCUMULATED_ACCURACIES).max())
-    print("\tAvg = ", np.array(ACCUMULATED_ACCURACIES).mean())
-    print("\tStd = ", np.array(ACCUMULATED_ACCURACIES).std())
-    print("\tlen = ", len(ACCUMULATED_ACCURACIES))
+    print("\tMin = ", minacc)
+    print("\tMax = ", maxacc)
+    print("\tAvg = ", avgacc)
+    print("\tStd = ", stdacc)
+    print("\tlen = ", lenacc)

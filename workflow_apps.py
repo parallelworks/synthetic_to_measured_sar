@@ -270,3 +270,29 @@ def train(ITER, K=0.0, dataset_root="./SAMPLE_Public_Dist_A/png_images/qpm", DSI
         std_f.write("MODEL NEVER LEARNED ANYTHING. NOT RECORDING\n")
 
     std_f.close()
+
+
+@parsl_utils.parsl_wrappers.log_app
+@python_app(executors=['compute_partition'])
+def merge(inputs = []):
+    import numpy as np
+
+    ACCUMULATED_ACCURACIES_FUTS = inputs
+    ACCUMULATED_ACCURACIES = []
+    
+    for ITER,FUT in enumerate(ACCUMULATED_ACCURACIES_FUTS):
+        print("**********************************************************")
+        print("Waiting Iter: {} / {} for K = {}".format(ITER, REPEAT_ITERS, K))
+        print("**********************************************************")
+        RESULT = FUT.result()
+        print(RESULT)
+        if RESULT:
+            ACCUMULATED_ACCURACIES.append(RESULT)
+
+
+    minacc = np.array(ACCUMULATED_ACCURACIES).min()
+    maxacc = np.array(ACCUMULATED_ACCURACIES).max()
+    avgacc = np.array(ACCUMULATED_ACCURACIES).mean()
+    stdacc = np.array(ACCUMULATED_ACCURACIES).std()
+    lenacc = len(ACCUMULATED_ACCURACIES)
+    return ACCUMULATED_ACCURACIES, minacc, maxacc, avgacc, stdacc, lenacc
