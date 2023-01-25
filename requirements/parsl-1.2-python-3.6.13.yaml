@@ -51,4 +51,28 @@ dependencies:
   - xz=5.2.6=h5eee18b_0
   - zeromq=4.3.4=h9c3ff4c_1
   - zlib=1.2.13=h5eee18b_0
-prefix: /pw/.miniconda3/envs/parsl-1.2-python-3.6.13
+  - pip:
+    - click==8.0.4
+    - dataclasses==0.8
+    - decorator==4.4.2
+    - docutils==0.18.1
+    - flask==2.0.3
+    - flask-sqlalchemy==2.5.1
+    - importlib-metadata==4.8.3
+    - itsdangerous==2.0.1
+    - jinja2==3.0.3
+    - lockfile==0.12.2
+    - markupsafe==2.0.1
+    - networkx==2.5.1
+    - pandas==1.1.5
+    - plotly==5.13.0
+    - pydot==1.4.2
+    - pyparsing==3.0.9
+    - python-daemon==2.3.2
+    - python-dateutil==2.8.2
+    - pytz==2022.7.1
+    - sqlalchemy==1.3.24
+    - sqlalchemy-utils==0.39.0
+    - tenacity==8.1.0
+    - werkzeug==2.0.3
+    - zipp==3.6.0
