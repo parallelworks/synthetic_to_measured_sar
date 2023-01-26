@@ -277,19 +277,7 @@ def train(ITER, K=0.0, dataset_root="./SAMPLE_Public_Dist_A/png_images/qpm", DSI
 def merge(K, REPEAT_ITERS, inputs = []):
     import numpy as np
 
-    ACCUMULATED_ACCURACIES_FUTS = inputs
-    ACCUMULATED_ACCURACIES = []
-    
-    for ITER,FUT in enumerate(ACCUMULATED_ACCURACIES_FUTS):
-        print("**********************************************************")
-        print("Waiting Iter: {} / {} for K = {}".format(ITER, REPEAT_ITERS, K))
-        print("**********************************************************")
-        RESULT = FUT.result()
-        print(RESULT)
-        if RESULT:
-            ACCUMULATED_ACCURACIES.append(RESULT)
-
-
+    ACCUMULATED_ACCURACIES = inputs
     minacc = np.array(ACCUMULATED_ACCURACIES).min()
     maxacc = np.array(ACCUMULATED_ACCURACIES).max()
     avgacc = np.array(ACCUMULATED_ACCURACIES).mean()
