@@ -281,3 +281,37 @@ def merge(K, REPEAT_ITERS, inputs = []):
     stdacc = np.array(ACCUMULATED_ACCURACIES).std()
     lenacc = len(ACCUMULATED_ACCURACIES)
     return ACCUMULATED_ACCURACIES, minacc, maxacc, avgacc, stdacc, lenacc
+
+
+@parsl_utils.parsl_wrappers.log_app
+@python_app(executors=['compute_partition'])
+def preprocess_images(angle, dataset_root, out_dir, inputs = []):
+    import glob
+    import os
+    from PIL import Image
+
+    def rotate_image(angle, input_path, output_path):
+        # Load the image
+        image = Image.open(input_path)
+        # Rotate the image by 90 degrees
+        rotated_image = image.rotate(int(angle))
+        # Save the rotated image to disk
+        rotated_image.save(output_path)
+
+    for case in ['real', 'synth']:
+        out_dir_case = os.path.join(out_dir, case)
+        os.makedirs(out_dir_case, exist_ok=True)
+        [
+            rotate_image(
+                angle,
+                real_img_path,
+                os.path.join(
+                    out_dir_case,
+                    os.path.basename(real_img_path).replace('.png', '_' + str(angle) + '.png')
+                )
+            )
+            for real_img_path in glob.glob("{}/{}/*/*.png".format(dataset_root,"real"))
+        ] 
+
+
+
