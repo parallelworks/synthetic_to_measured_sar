@@ -56,7 +56,7 @@ def train(ITER, K=0.0, dataset_root="./SAMPLE_Public_Dist_A/png_images/qpm", DSI
 
     # Custom
     import sys
-    sys.path.append(os.getcwd())
+    sys.path.append(os.path.join(os.getcwd(),'models/pytorch'))
     import models
     import create_split
     import Dataset_fromPythonList as custom_dset
