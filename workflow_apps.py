@@ -8,12 +8,9 @@ import parsl_utils
 
 @parsl_utils.parsl_wrappers.log_app
 @bash_app(executors=['compute_partition'])
-def prepare_rundir(run_dir, data_repo_dir="./SAMPLE_Public_Dist_A", stdout= 'std.out', stderr = 'std.err'):
+def prepare_rundir(run_dir, data_repo_dir="./SAMPLE_Public_Dist_A", inputs = [], stdout= 'std.out', stderr = 'std.err'):
     return '''
         cd {run_dir}
-        rm -rf clone
-        git clone https://github.com/inkawhich/synthetic-to-measured-sar.git clone
-        mv clone/* .
         if ! [ -d "{data_repo_dir}" ]; then
             git clone https://github.com/benjaminlewis-afrl/SAMPLE_dataset_public {data_repo_dir}
         fi
