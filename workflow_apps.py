@@ -30,7 +30,7 @@ def prepare_rundir(run_dir, data_repo_dir="./SAMPLE_Public_Dist_A", inputs = [],
 #AT_EPS = 8./255.; AT_ALPHA = 2./255. ; AT_ITERS = 7
 @parsl_utils.parsl_wrappers.log_app
 @python_app(executors=['compute_partition'])
-def train(ITER, K=0.0, dataset_root="./SAMPLE_Public_Dist_A/png_images/qpm", DSIZE=64, num_epochs=60, batch_size=128,
+def train(ITER, K=0.0, dataset_root=["./SAMPLE_Public_Dist_A/png_images/qpm"], DSIZE=64, num_epochs=60, batch_size=128,
           learning_rate_decay_schedule=[61], learning_rate=0.001, gamma=0.1, weight_decay=0., dropout=0.4, gaussian_std=0.4,
           uniform_range=0., simClutter=0., flipProb=0., degrees=0, LBLSMOOTHING_PARAM=0.1, MIXUP_ALPHA=0.1, std = 'std.out', inputs = []):
 

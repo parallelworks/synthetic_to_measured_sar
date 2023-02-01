@@ -17,7 +17,11 @@ def create_mixed_dataset_exp41(root, k):
 
 	# Create the splits for each of the classes individually
 	for cls in CLASSES:
-		all_measured = glob.glob("{}/{}/{}/*.png".format(root,"real",cls))
+		all_measured = []
+		all_measured = [ glob.glob("{}/{}/{}/*.png".format(root_i,"real",cls)) for root_i in root ]
+		# Flatten list of lists
+		all_measured = [ item for sublist in all_measured for item in sublist ]
+
 		Nmj = len(all_measured)
 		test_data = []; train_data = []
 		for fname in all_measured:

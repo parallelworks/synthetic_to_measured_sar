@@ -69,7 +69,7 @@ if __name__ == '__main__':
                 degrees = int(pwargs['degrees']),
                 LBLSMOOTHING_PARAM = float(pwargs['LBLSMOOTHING_PARAM']),
                 MIXUP_ALPHA = float(pwargs['MIXUP_ALPHA']),
-                dataset_root = dataset_root,
+                dataset_root = [dataset_root],
                 std = 'std-{}.out'.format(ITER),
                 inputs = [prepare_rundir_fut]
             )
