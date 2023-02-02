@@ -86,7 +86,7 @@ if __name__ == '__main__':
                 MIXUP_ALPHA = float(pwargs['MIXUP_ALPHA']),
                 dataset_root = [dataset_root, pp_images_out_dir],
                 std = 'std-{}.out'.format(ITER),
-                inputs = [preprocess_images_fut]
+                inputs = pp_futs
             )
         )
 
