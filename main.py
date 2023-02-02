@@ -13,9 +13,10 @@ from parsl_utils.config import config, exec_conf, pwargs, job_number
 from parsl_utils.data_provider import PWFile
 
 
-from workflow_apps import prepare_rundir, train, merge
+from workflow_apps import prepare_rundir, train, preprocess_images, merge
 
 if __name__ == '__main__':
+    angle = 90
     REPEAT_ITERS = int(pwargs['REPEAT_ITERS'])
     K = float(pwargs['K'])
 
@@ -40,6 +41,9 @@ if __name__ == '__main__':
         stdout = 'prepare_rundir_fut.out',
         stderr = 'prepare_rundir_fut.err'
     )
+
+    pp_images_out_dir = 'pp_images'
+    preprocess_images_fut = preprocess_images(angle, dataset_root, pp_images_out_dir, inputs = [prepare_rundir_fut])
 
     ACCUMULATED_ACCURACIES_FUTS = []
     print("\n\n**********************************************************")
@@ -69,9 +73,9 @@ if __name__ == '__main__':
                 degrees = int(pwargs['degrees']),
                 LBLSMOOTHING_PARAM = float(pwargs['LBLSMOOTHING_PARAM']),
                 MIXUP_ALPHA = float(pwargs['MIXUP_ALPHA']),
-                dataset_root = [dataset_root],
+                dataset_root = [dataset_root, pp_images_out_dir],
                 std = 'std-{}.out'.format(ITER),
-                inputs = [prepare_rundir_fut]
+                inputs = [preprocess_images_fut]
             )
         )
 
