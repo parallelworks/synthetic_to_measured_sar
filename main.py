@@ -16,7 +16,6 @@ from parsl_utils.data_provider import PWFile
 from workflow_apps import prepare_rundir, train, preprocess_images, merge
 
 if __name__ == '__main__':
-    angle = 90
     REPEAT_ITERS = int(pwargs['REPEAT_ITERS'])
     K = float(pwargs['K'])
 
@@ -42,8 +41,20 @@ if __name__ == '__main__':
         stderr = 'prepare_rundir_fut.err'
     )
 
+    print("\n\n**********************************************************")
+    print("Preprocessing Images")
+    print("**********************************************************")
+    pp_futs = []
     pp_images_out_dir = 'pp_images'
-    preprocess_images_fut = preprocess_images(angle, dataset_root, pp_images_out_dir, inputs = [prepare_rundir_fut])
+    for rot_angle in pwargs['rot_angles'].split('___'):
+        pp_futs.append(
+            preprocess_images(
+                int(rot_angle), 
+                dataset_root, 
+                os.path.join(pp_images_out_dir, rot_angle), 
+                inputs = [prepare_rundir_fut]
+            )
+        )
 
     ACCUMULATED_ACCURACIES_FUTS = []
     print("\n\n**********************************************************")
