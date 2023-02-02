@@ -33,7 +33,7 @@ if __name__ == '__main__':
         data_repo_dir = data_repo_dir,
         inputs = [ 
             PWFile(
-                url = 'file://usercontainer/{cwd}/models/pytorch'.format(cwd = os.getcwd()),
+                url = 'file://usercontainer/{cwd}/models/pytorch/'.format(cwd = os.getcwd()),
                 local_path = '{remote_dir}/models/pytorch'.format(remote_dir =  exec_conf['compute_partition']['RUN_DIR'])
             )
         ],
