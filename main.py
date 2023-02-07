@@ -13,7 +13,7 @@ from parsl_utils.config import config, exec_conf, pwargs, job_number
 from parsl_utils.data_provider import PWFile
 
 
-from workflow_apps import prepare_rundir, train, preprocess_images, merge
+from workflow_apps import prepare_rundir, train, preprocess_images_python, merge, preprocess_images_matlab
 
 if __name__ == '__main__':
     REPEAT_ITERS = int(pwargs['REPEAT_ITERS'])
@@ -33,8 +33,8 @@ if __name__ == '__main__':
         data_repo_dir = data_repo_dir,
         inputs = [ 
             PWFile(
-                url = 'file://usercontainer/{cwd}/models/pytorch/'.format(cwd = os.getcwd()),
-                local_path = '{remote_dir}/models/pytorch'.format(remote_dir =  exec_conf['compute_partition']['RUN_DIR'])
+                url = 'file://usercontainer/{cwd}/models/'.format(cwd = os.getcwd()),
+                local_path = '{remote_dir}/models'.format(remote_dir =  exec_conf['compute_partition']['RUN_DIR'])
             )
         ],
         stdout = 'prepare_rundir_fut.out',
@@ -44,17 +44,25 @@ if __name__ == '__main__':
     print("\n\n**********************************************************")
     print("Preprocessing Images")
     print("**********************************************************")
+    if pwargs['prepro_tool'] == 'matlab':
+        preprocess_images = preprocess_images_matlab
+    else:
+        preprocess_images = preprocess_images_python
+
     pp_futs = []
     pp_images_out_dir = 'pp_images'
-    for rot_angle in pwargs['rot_angles'].split('___'):
-        pp_futs.append(
-            preprocess_images(
-                rot_angle, 
-                dataset_root, 
-                pp_images_out_dir, 
-                inputs = [prepare_rundir_fut]
+    for case in ['real', 'synth']:
+        for rot_angle in pwargs['rot_angles'].split('___'):
+            pp_futs.append(
+                preprocess_images(
+                    rot_angle, 
+                    os.path.join(dataset_root, case), 
+                    os.path.join(pp_images_out_dir, case),
+                    stdout = './std-' + case + '-' + rot_angle + '.out',
+                    stderr = './std-' + case + '-' + rot_angle + '.err',
+                    inputs = [prepare_rundir_fut]
+                )
             )
-        )
 
     ACCUMULATED_ACCURACIES_FUTS = []
     print("\n\n**********************************************************")

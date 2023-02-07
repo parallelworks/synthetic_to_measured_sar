@@ -285,7 +285,7 @@ def merge(K, REPEAT_ITERS, inputs = []):
 
 @parsl_utils.parsl_wrappers.log_app
 @python_app(executors=['compute_partition'])
-def preprocess_images(angle, dataset_root, out_dir, inputs = []):
+def preprocess_images_python(angle, src_dir, dst_dir, stderr='std.err', stdout='std.out', inputs = []):
     import glob
     import os
     from PIL import Image
@@ -299,24 +299,34 @@ def preprocess_images(angle, dataset_root, out_dir, inputs = []):
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
         rotated_image.save(output_path)
 
-    for case in ['real', 'synth']:
-        [
-            rotate_image(
-                angle,
-                img_path,
-                img_path.replace(dataset_root, out_dir).replace('.png', '_rotangle_' + str(angle) + '.png')
-            )
-            for img_path in glob.glob("{}/{}/*/*.png".format(dataset_root, case))
-        ] 
+    [
+        rotate_image(
+            angle,
+            img_path,
+            img_path.replace(src_dir, dst_dir).replace('.png', '_rotangle_' + str(angle) + '.png')
+        )
+        for img_path in glob.glob("{}/*/*.png".format(src_dir))
+    ] 
 
 
 
 @parsl_utils.parsl_wrappers.log_app
 @bash_app(executors=['compute_partition'])
-def preprocess_images_matlab(angle, dataset_root, out_dir, inputs = []):
+def preprocess_images_matlab(angle, src_dir, dst_dir, stderr='std.err', stdout='std.out', inputs = []):
     return '''
     set -x
     date
-    mkdir -p {out_dir}
-
-    '''
+    mkdir -p {dst_dir}
+    sed \
+        -e "s|__src_dir__|${src_dir}|g" \
+        -e "s|__dst_dir__|${dst_dir}|g" \
+        -e "s|__angle__|${angle}|g" \
+        rotate_images_template.m > rotate_images.m
+        
+    module load matlab
+    matlab -nodisplay -nosplash -r "run('rotate_images.m'); quit;"
+    '''.format(
+        angle = angle,
+        src_dir = src_dir,
+        dst_dir = dst_dir
+    )
