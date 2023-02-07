@@ -304,13 +304,13 @@ def preprocess_images(angle, dataset_root, out_dir, inputs = []):
         [
             rotate_image(
                 angle,
-                real_img_path,
+                img_path,
                 os.path.join(
                     out_dir_case,
-                    os.path.basename(real_img_path).replace('.png', '_' + str(angle) + '.png')
+                    os.path.basename(img_path).replace('.png', '_' + str(angle) + '.png')
                 )
             )
-            for real_img_path in glob.glob("{}/{}/*/*.png".format(dataset_root, case))
+            for img_path in glob.glob("{}/{}/*/*.png".format(dataset_root, case))
         ] 
 
 
