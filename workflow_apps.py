@@ -310,8 +310,17 @@ def preprocess_images(angle, dataset_root, out_dir, inputs = []):
                     os.path.basename(real_img_path).replace('.png', '_' + str(angle) + '.png')
                 )
             )
-            for real_img_path in glob.glob("{}/{}/*/*.png".format(dataset_root,"real"))
+            for real_img_path in glob.glob("{}/{}/*/*.png".format(dataset_root, case))
         ] 
 
 
 
+@parsl_utils.parsl_wrappers.log_app
+@bash_app(executors=['compute_partition'])
+def preprocess_images_matlab(angle, dataset_root, out_dir, inputs = []):
+    return '''
+    set -x
+    date
+    mkdir -p {out_dir}
+
+    '''

@@ -49,7 +49,7 @@ if __name__ == '__main__':
     for rot_angle in pwargs['rot_angles'].split('___'):
         pp_futs.append(
             preprocess_images(
-                int(rot_angle), 
+                rot_angle, 
                 dataset_root, 
                 os.path.join(pp_images_out_dir, rot_angle), 
                 inputs = [prepare_rundir_fut]
