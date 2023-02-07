@@ -51,7 +51,7 @@ if __name__ == '__main__':
             preprocess_images(
                 rot_angle, 
                 dataset_root, 
-                os.path.join(pp_images_out_dir, rot_angle), 
+                pp_images_out_dir, 
                 inputs = [prepare_rundir_fut]
             )
         )
