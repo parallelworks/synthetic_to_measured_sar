@@ -304,7 +304,7 @@ def preprocess_images(angle, dataset_root, out_dir, inputs = []):
             rotate_image(
                 angle,
                 img_path,
-                img_path.replace(dataset_root, out_dir)
+                img_path.replace(dataset_root, out_dir).replace('.png', '_rotangle_' + str(angle) + '.png')
             )
             for img_path in glob.glob("{}/{}/*/*.png".format(dataset_root, case))
         ] 
