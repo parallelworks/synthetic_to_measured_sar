@@ -296,11 +296,10 @@ def preprocess_images(angle, dataset_root, out_dir, inputs = []):
         # Rotate the image by 90 degrees
         rotated_image = image.rotate(int(angle))
         # Save the rotated image to disk
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
         rotated_image.save(output_path)
 
     for case in ['real', 'synth']:
-        out_dir_case = os.path.join(out_dir, case)
-        os.makedirs(out_dir_case, exist_ok=True)
         [
             rotate_image(
                 angle,
