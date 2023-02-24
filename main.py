@@ -47,12 +47,13 @@ if __name__ == '__main__':
     print("Preprocessing Images")
     print("**********************************************************")
     if pwargs['prepro_tool'] == 'matlab':
+        # FIXME: Generalize internal_ip_controller 
         preprocess_images = partial(
             preprocess_images_matlab,
             matlab_bin = pwargs['matlab_bin'],
             matlab_server_port = pwargs['matlab_server_port'],
             matlab_daemon_port = pwargs['matlab_daemon_port'],
-            internal_ip_controller = '10.1.1.219'
+            internal_ip_controller = config.executors[0].address
         )
     else:
         preprocess_images = preprocess_images_python
