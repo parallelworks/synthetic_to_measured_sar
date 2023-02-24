@@ -320,18 +320,18 @@ def preprocess_images_matlab(angle, src_dir, dst_dir, matlab_bin, matlab_server_
     date
     mkdir -p {dst_dir}
     sed \
-        -e "s|__src_dir__|${src_dir}|g" \
-        -e "s|__dst_dir__|${dst_dir}|g" \
-        -e "s|__angle__|${angle}|g" \
+        -e "s|__src_dir__|{src_dir}|g" \
+        -e "s|__dst_dir__|{dst_dir}|g" \
+        -e "s|__angle__|{angle}|g" \
         rotate_images_template.m > rotate_images.m
         
-    ssh -f -N -J ${internal_ip_controller} \
+    ssh -f -N -J {internal_ip_controller} \
         -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
-        -L 0.0.0.0:${server_port}:localhost:${server_port} \
-        -L 0.0.0.0:${daemon_port}:localhost:${daemon_port} \
+        -L 0.0.0.0:{matlab_server_port}:localhost:{matlab_server_port} \
+        -L 0.0.0.0:{matlab_daemon_port}:localhost:{matlab_daemon_port} \
         usercontainer
     
-    export MLM_LICENSE_FILE=${server_port}@localhost
+    export MLM_LICENSE_FILE={matlab_server_port}@localhost
     #module load matlab
     {matlab_bin} -nodisplay -nosplash -r "run('rotate_images.m'); quit;"
     '''.format(
