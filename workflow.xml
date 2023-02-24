@@ -12,13 +12,13 @@
       </param>
     </section>
     <section name='cnn' type='section' title='PyTorch CNN' expanded='true'>
-      <param name='REPEAT_ITERS' label='Number of Iterations:' type='integer' min='2' max='200' help='Model is trained multiple time to compute statistics' value='5' width='25%'>
+      <param name='REPEAT_ITERS' label='Number of Iterations:' type='integer' min='2' max='200' help='Model is trained multiple time to compute statistics' value='3' width='25%'>
       </param>
       <param name='K' label='K' type='text' help='Proportion of real data [0,1] where 0 is all synthetic and 1 is all real' value='0' width='25%'>
       </param>
       <param name='DSIZE' label='DSIZE' type='text' value='64' width='25%'>
       </param>
-      <param name='num_epochs' label='Number of Epochs' type='text' value='5' width='25%'>
+      <param name='num_epochs' label='Number of Epochs' type='text' value='10' width='25%'>
       </param>
       <param name='batch_size' label='Batch Size' type='text' value='128' width='25%'>
       </param>
