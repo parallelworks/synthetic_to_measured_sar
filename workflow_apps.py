@@ -312,7 +312,9 @@ def preprocess_images_python(angle, src_dir, dst_dir, stderr='std.err', stdout='
 
 @parsl_utils.parsl_wrappers.log_app
 @bash_app(executors=['compute_partition'])
-def preprocess_images_matlab(angle, src_dir, dst_dir, stderr='std.err', stdout='std.out', inputs = []):
+def preprocess_images_matlab(angle, src_dir, dst_dir, matlab_bin, matlab_server_port, 
+                             matlab_daemon_port, internal_ip_controller, 
+                             stderr='std.err', stdout='std.out', inputs = []):
     return '''
     set -x
     date
@@ -323,10 +325,21 @@ def preprocess_images_matlab(angle, src_dir, dst_dir, stderr='std.err', stdout='
         -e "s|__angle__|${angle}|g" \
         rotate_images_template.m > rotate_images.m
         
-    module load matlab
-    matlab -nodisplay -nosplash -r "run('rotate_images.m'); quit;"
+    ssh -f -N -J ${internal_ip_controller} \
+        -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
+        -L 0.0.0.0:${server_port}:localhost:${server_port} \
+        -L 0.0.0.0:${daemon_port}:localhost:${daemon_port} \
+        usercontainer
+    
+    export MLM_LICENSE_FILE=${server_port}@localhost
+    #module load matlab
+    {matlab_bin} -nodisplay -nosplash -r "run('rotate_images.m'); quit;"
     '''.format(
         angle = angle,
         src_dir = src_dir,
-        dst_dir = dst_dir
+        dst_dir = dst_dir,
+        matlab_bin = matlab_bin,
+        matlab_server_port = matlab_server_port,
+        matlab_daemon_port = matlab_daemon_port,
+        internal_ip_controller = internal_ip_controller
     )

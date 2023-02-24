@@ -1,6 +1,8 @@
 import sys, os, json, time
 from random import randint
 import argparse
+from functools import partial
+
 
 import parsl
 print(parsl.__version__, flush = True)
@@ -45,7 +47,13 @@ if __name__ == '__main__':
     print("Preprocessing Images")
     print("**********************************************************")
     if pwargs['prepro_tool'] == 'matlab':
-        preprocess_images = preprocess_images_matlab
+        preprocess_images = partial(
+            preprocess_images_matlab,
+            matlab_bin = pwargs['matlab_bin'],
+            matlab_server_port = pwargs['matlab_server_port'],
+            matlab_daemon_port = pwargs['matlab_daemon_port'],
+            internal_ip_controller = '10.1.1.219'
+        )
     else:
         preprocess_images = preprocess_images_python
 
