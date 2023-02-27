@@ -285,7 +285,7 @@ def merge(K, REPEAT_ITERS, inputs = []):
 
 @parsl_utils.parsl_wrappers.log_app
 @python_app(executors=['compute_partition'])
-def preprocess_images(angle, dataset_root, out_dir, inputs = []):
+def preprocess_images_python(angle, src_dir, dst_dir, stderr='std.err', stdout='std.out', inputs = []):
     import glob
     import os
     from PIL import Image
@@ -296,22 +296,50 @@ def preprocess_images(angle, dataset_root, out_dir, inputs = []):
         # Rotate the image by 90 degrees
         rotated_image = image.rotate(int(angle))
         # Save the rotated image to disk
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
         rotated_image.save(output_path)
 
-    for case in ['real', 'synth']:
-        out_dir_case = os.path.join(out_dir, case)
-        os.makedirs(out_dir_case, exist_ok=True)
-        [
-            rotate_image(
-                angle,
-                real_img_path,
-                os.path.join(
-                    out_dir_case,
-                    os.path.basename(real_img_path).replace('.png', '_' + str(angle) + '.png')
-                )
-            )
-            for real_img_path in glob.glob("{}/{}/*/*.png".format(dataset_root,"real"))
-        ] 
+    [
+        rotate_image(
+            angle,
+            img_path,
+            img_path.replace(src_dir, dst_dir).replace('.png', '_rotangle_' + str(angle) + '.png')
+        )
+        for img_path in glob.glob("{}/*/*.png".format(src_dir))
+    ] 
 
 
 
+@parsl_utils.parsl_wrappers.log_app
+@bash_app(executors=['compute_partition'])
+def preprocess_images_matlab(angle, src_dir, dst_dir, matlab_bin, matlab_server_port, 
+                             matlab_daemon_port, internal_ip_controller, 
+                             stderr='std.err', stdout='std.out', inputs = []):
+    return '''
+    set -x
+    date
+    mkdir -p {dst_dir}
+    sed \
+        -e "s|__src_dir__|{src_dir}|g" \
+        -e "s|__dst_dir__|{dst_dir}|g" \
+        -e "s|__angle__|{angle}|g" \
+        rotate_images_template.m > rotate_images.m
+        
+    ssh -f -N -J {internal_ip_controller} \
+        -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
+        -L 0.0.0.0:{matlab_server_port}:localhost:{matlab_server_port} \
+        -L 0.0.0.0:{matlab_daemon_port}:localhost:{matlab_daemon_port} \
+        usercontainer
+    
+    export MLM_LICENSE_FILE={matlab_server_port}@localhost
+    #module load matlab
+    {matlab_bin} -nodisplay -nosplash -r "run('rotate_images.m'); quit;"
+    '''.format(
+        angle = angle,
+        src_dir = src_dir,
+        dst_dir = dst_dir,
+        matlab_bin = matlab_bin,
+        matlab_server_port = matlab_server_port,
+        matlab_daemon_port = matlab_daemon_port,
+        internal_ip_controller = internal_ip_controller
+    )
