@@ -19,6 +19,18 @@ def prepare_rundir(run_dir, data_repo_dir="./SAMPLE_Public_Dist_A", inputs = [],
         data_repo_dir = data_repo_dir
     )
 
+@parsl_utils.parsl_wrappers.log_app
+@bash_app(executors=['compute_partition'])
+def mpi_add_noise(np, src_dir, dst_dir, noise_amount, inputs = [], stdout= 'std-noise.out', stderr = 'std-noise.err'):
+    return '''
+        mpirun -np {np} models/mpi4py/mpi_add_noise.py {src_dir} {dst_dir} {noise_amount}
+    '''.format(
+            np = np,
+            src_dir = src_dir,
+            dst_dir = dst_dir,
+            noise_amount = noise_amount
+        )
+
 
 # Main training file for SAMPLE Experiment 4.1, where we vary the percentage of synthetic vs measured
 # data in the training set
