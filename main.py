@@ -82,16 +82,20 @@ if __name__ == '__main__':
         )
         
         for rot_angle in pwargs['rot_angles'].split('___'):
-            pp_futs.append(
-                preprocess_images(
-                    rot_angle, 
-                    noise_dir, 
-                    noise_rot_dir,
-                    stdout = './std-' + case + '-' + rot_angle + '.out',
-                    stderr = './std-' + case + '-' + rot_angle + '.err',
-                    inputs = [mpi_fut]
-                )
+            pp_fut = preprocess_images(
+                rot_angle, 
+                noise_dir, 
+                noise_rot_dir,
+                stdout = './std-' + case + '-' + rot_angle + '.out',
+                stderr = './std-' + case + '-' + rot_angle + '.err',
+                inputs = [mpi_fut]
             )
+            pp_futs.append(pp_fut)
+
+            # We only have one matlab license
+            if pwargs['prepro_tool'] == 'matlab':
+                pp_fut.result()
+
 
     ACCUMULATED_ACCURACIES_FUTS = []
     print("\n\n**********************************************************")
