@@ -343,6 +343,10 @@ def preprocess_images_matlab(angle, src_dir, dst_dir, matlab_bin, matlab_server_
         -L 0.0.0.0:{matlab_daemon_port}:localhost:{matlab_daemon_port} \
         usercontainer
     
+    # ./etc/glnxa64/lmutil lmstat -c 27010@0.0.0.0 -f matlab > matlab_license.info
+    # issued=$(cat matlab_license.info  | grep MATLAB  | sed "s/Total/\n/g" | grep issued | awk '{print $2}')
+    # in_use=$(cat matlab_license.info  | grep MATLAB  | sed "s/Total/\n/g" | grep use | awk '{print $2}')
+    
     export MLM_LICENSE_FILE={matlab_server_port}@localhost
     #module load matlab
     {matlab_bin} -nodisplay -nosplash -r "run('rotate_images.m'); quit;"

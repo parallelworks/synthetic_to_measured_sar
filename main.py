@@ -92,10 +92,6 @@ if __name__ == '__main__':
             )
             pp_futs.append(pp_fut)
 
-            # We only have one matlab license
-            if pwargs['prepro_tool'] == 'matlab':
-                pp_fut.result()
-
 
     ACCUMULATED_ACCURACIES_FUTS = []
     print("\n\n**********************************************************")
