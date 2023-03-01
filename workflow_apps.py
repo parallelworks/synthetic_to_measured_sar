@@ -343,6 +343,7 @@ def preprocess_images_matlab(angle, src_dir, dst_dir, matlab_bin, matlab_server_
         -L 0.0.0.0:{matlab_daemon_port}:localhost:{matlab_daemon_port} \
         usercontainer
     
+    # sudo yum -y install lsb
     # ./etc/glnxa64/lmutil lmstat -c 27010@0.0.0.0 -f matlab > matlab_license.info
     # issued=$(cat matlab_license.info  | grep MATLAB  | sed "s/Total/\n/g" | grep issued | awk '{print $2}')
     # in_use=$(cat matlab_license.info  | grep MATLAB  | sed "s/Total/\n/g" | grep use | awk '{print $2}')
