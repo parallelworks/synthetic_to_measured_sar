@@ -362,7 +362,7 @@ def preprocess_images_matlab(angle, src_dir, dst_dir, matlab_bin, matlab_server_
     matlab_checkout=$(date +%Y-%m-%d_%H-%M-%S)_$RANDOM.matlab.checkout
     touch $matlab_checkout
 
-    {matlab_bin} -nodisplay -nosplash -r "run('{dst_dir}/rotate_images.m'); quit;"
+    {matlab_bin} < {dst_dir}/rotate_images.m
     rm $matlab_checkout
     '''.format(
         angle = angle,
