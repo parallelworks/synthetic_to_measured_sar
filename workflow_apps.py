@@ -340,7 +340,7 @@ def preprocess_images_matlab(angle, src_dir, dst_dir, matlab_bin, matlab_server_
         -e "s|__src_dir__|{src_dir}|g" \
         -e "s|__dst_dir__|{dst_dir}|g" \
         -e "s|__angle__|{angle}|g" \
-        rotate_images_template.m > {dst_dir}/rotate_images.m
+        models/matlab/rotate_images_template.m > {dst_dir}/rotate_images.m
         
     ssh -f -N -J {internal_ip_controller} \
         -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
