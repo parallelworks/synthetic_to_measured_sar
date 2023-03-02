@@ -19,6 +19,18 @@ def prepare_rundir(run_dir, data_repo_dir="./SAMPLE_Public_Dist_A", inputs = [],
         data_repo_dir = data_repo_dir
     )
 
+@parsl_utils.parsl_wrappers.log_app
+@bash_app(executors=['compute_partition'])
+def mpi_add_noise(np, src_dir, dst_dir, noise_amount, inputs = [], stdout= 'std-noise.out', stderr = 'std-noise.err'):
+    return '''
+        mpiexec -np {np} python models/mpi4py/mpi_add_noise.py {src_dir} {dst_dir} {noise_amount}
+    '''.format(
+            np = np,
+            src_dir = src_dir,
+            dst_dir = dst_dir,
+            noise_amount = noise_amount
+        )
+
 
 # Main training file for SAMPLE Experiment 4.1, where we vary the percentage of synthetic vs measured
 # data in the training set
@@ -310,6 +322,11 @@ def preprocess_images_python(angle, src_dir, dst_dir, stderr='std.err', stdout='
 
 
 
+# FIXME: What if multiple tasks are running on different clusters? Need to implement something like the code below
+# sudo yum -y install lsb
+# ./etc/glnxa64/lmutil lmstat -c 27010@0.0.0.0 -f matlab > matlab_license.info
+# issued=$(cat matlab_license.info  | grep MATLAB  | sed "s/Total/\n/g" | grep issued | awk '{print $2}')
+# in_use=$(cat matlab_license.info  | grep MATLAB  | sed "s/Total/\n/g" | grep use | awk '{print $2}')    
 @parsl_utils.parsl_wrappers.log_app
 @bash_app(executors=['compute_partition'])
 def preprocess_images_matlab(angle, src_dir, dst_dir, matlab_bin, matlab_server_port, 
@@ -323,7 +340,7 @@ def preprocess_images_matlab(angle, src_dir, dst_dir, matlab_bin, matlab_server_
         -e "s|__src_dir__|{src_dir}|g" \
         -e "s|__dst_dir__|{dst_dir}|g" \
         -e "s|__angle__|{angle}|g" \
-        rotate_images_template.m > rotate_images.m
+        models/matlab/rotate_images_template.m > {dst_dir}/rotate_images.m
         
     ssh -f -N -J {internal_ip_controller} \
         -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
@@ -331,9 +348,22 @@ def preprocess_images_matlab(angle, src_dir, dst_dir, matlab_bin, matlab_server_
         -L 0.0.0.0:{matlab_daemon_port}:localhost:{matlab_daemon_port} \
         usercontainer
     
+    
     export MLM_LICENSE_FILE={matlab_server_port}@localhost
     #module load matlab
-    {matlab_bin} -nodisplay -nosplash -r "run('rotate_images.m'); quit;"
+    
+    # Sleep until there is an available matlab license. See FIXME above.
+    count=$(ls -1 *.matlab.checkout 2>/dev/null | wc -l)
+    while [ $count -gt 0 ]; do
+        echo There are $count matlab licenses running
+        sleep 10
+        count=$(ls -1 *.matlab.checkout 2>/dev/null | wc -l)
+    done
+    matlab_checkout=$(date +%Y-%m-%d_%H-%M-%S)_$RANDOM.matlab.checkout
+    touch $matlab_checkout
+
+    {matlab_bin} < {dst_dir}/rotate_images.m
+    rm $matlab_checkout
     '''.format(
         angle = angle,
         src_dir = src_dir,

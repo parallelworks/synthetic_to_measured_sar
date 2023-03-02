@@ -24,8 +24,16 @@ for i = 1:numel(files)
    img = imread(img_path);
 
    % Rotate the image by the given angle (in degrees)
-   img_rotated = imrotate(img, angle);
+   %img_rotated = imrotate(img, angle);
+   if angle == '90'
+       img_rotated = rot90(img, -1);
+   elseif angle == '180'
+       img_rotated = rot90(img, 2);
+   else
+       img_rotated = rot90(img, 1);
+   end
 
+    
    % Save the rotated image to the destination directory
    imwrite(img_rotated, img_path_out);
 end

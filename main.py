@@ -15,7 +15,7 @@ from parsl_utils.config import config, exec_conf, pwargs, job_number
 from parsl_utils.data_provider import PWFile
 
 
-from workflow_apps import prepare_rundir, train, preprocess_images_python, merge, preprocess_images_matlab
+from workflow_apps import prepare_rundir, mpi_add_noise, train, preprocess_images_python, merge, preprocess_images_matlab
 
 if __name__ == '__main__':
     REPEAT_ITERS = int(pwargs['REPEAT_ITERS'])
@@ -58,20 +58,40 @@ if __name__ == '__main__':
     else:
         preprocess_images = preprocess_images_python
 
+    # Add noise to the training data and rotate it
     pp_futs = []
-    pp_images_out_dir = 'pp_images'
+    pp_images_out_dir = 'noise_rotated_images'
+    noise_images_futs = []
+    noise_images_out_dir = 'noise_images'
     for case in ['real', 'synth']:
+        # Directory with original images
+        src_dir = os.path.join(dataset_root, case)
+        # Directory with noisy images
+        noise_dir = os.path.join(noise_images_out_dir, case)
+        # Directory with noisy rotated images         
+        noise_rot_dir = os.path.join(pp_images_out_dir, case)
+
+        mpi_fut = mpi_add_noise(
+            pwargs['np'],
+            src_dir, 
+            noise_dir,
+            pwargs['noise_amount'],
+            stdout = './std-' + case + '-mpi-noise.out',
+            stderr = './std-' + case + '-mpi-noise.err',
+            inputs = [prepare_rundir_fut]
+        )
+        
         for rot_angle in pwargs['rot_angles'].split('___'):
-            pp_futs.append(
-                preprocess_images(
-                    rot_angle, 
-                    os.path.join(dataset_root, case), 
-                    os.path.join(pp_images_out_dir, case),
-                    stdout = './std-' + case + '-' + rot_angle + '.out',
-                    stderr = './std-' + case + '-' + rot_angle + '.err',
-                    inputs = [prepare_rundir_fut]
-                )
+            pp_fut = preprocess_images(
+                rot_angle, 
+                noise_dir, 
+                noise_rot_dir,
+                stdout = './std-' + case + '-' + rot_angle + '.out',
+                stderr = './std-' + case + '-' + rot_angle + '.err',
+                inputs = [mpi_fut]
             )
+            pp_futs.append(pp_fut)
+
 
     ACCUMULATED_ACCURACIES_FUTS = []
     print("\n\n**********************************************************")
