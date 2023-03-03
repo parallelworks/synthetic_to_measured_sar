@@ -17,6 +17,7 @@
       <conditional name="prepo_tool_cond">
           <param name='prepro_tool' type='select' label='Select Processing Tool' help='' width='50%_none' multiple='false'>
             <option value="matlab" selected="true">Matlab</option>
+            <option value="matlab_compiled" >Compiled Matlab</option>
             <option value="python">Python</option>
           </param>
           <when value="matlab">
@@ -25,6 +26,10 @@
             <param name='matlab_server_port' label='Matlab Server Port' type='text' help='' value='27010' width='25%'>
             </param>
             <param name='matlab_daemon_port' label='Matlab Daemon Port' type='text' help='' value='1711' width='25%'>
+            </param>
+          </when>
+          <when value="matlab_compiled">
+            <param name='matlab_runtime' label='Path to Matlab Runtime Directory' type='text' help='' value='/contrib/__PW_USER__/MATLAB/MATLAB_Runtime/' width='50%_none'>
             </param>
           </when>
       </conditional>
