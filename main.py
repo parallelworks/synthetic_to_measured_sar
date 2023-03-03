@@ -57,7 +57,7 @@ if __name__ == '__main__':
         )
     elif pwargs['prepro_tool'] == 'matlab_compiled':
         preprocess_images = partial(
-            preprocess_images_matlab,
+            preprocess_images_cmatlab,
             mcrroot = pwargs['mcrroot']
         )
     else:
