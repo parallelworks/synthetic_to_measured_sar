@@ -15,7 +15,7 @@ from parsl_utils.config import config, exec_conf, pwargs, job_number
 from parsl_utils.data_provider import PWFile
 
 
-from workflow_apps import prepare_rundir, mpi_add_noise, train, preprocess_images_python, merge, preprocess_images_matlab
+from workflow_apps import prepare_rundir, mpi_add_noise, train, preprocess_images_python, merge, preprocess_images_matlab, preprocess_images_cmatlab
 
 if __name__ == '__main__':
     REPEAT_ITERS = int(pwargs['REPEAT_ITERS'])
@@ -54,6 +54,11 @@ if __name__ == '__main__':
             matlab_server_port = pwargs['matlab_server_port'],
             matlab_daemon_port = pwargs['matlab_daemon_port'],
             internal_ip_controller = config.executors[0].address
+        )
+    elif pwargs['prepro_tool'] == 'matlab_compiled':
+        preprocess_images = partial(
+            preprocess_images_matlab,
+            mcrroot = pwargs['mcrroot']
         )
     else:
         preprocess_images = preprocess_images_python

@@ -29,7 +29,7 @@
             </param>
           </when>
           <when value="matlab_compiled">
-            <param name='matlab_runtime' label='Path to Matlab Runtime Directory' type='text' help='' value='/contrib/__PW_USER__/MATLAB/MATLAB_Runtime/' width='50%_none'>
+            <param name='mcrroot' label='Path to Matlab Runtime Directory' type='text' help='' value='/contrib/__PW_USER__/MATLAB/MATLAB_Runtime/v912' width='50%_none'>
             </param>
           </when>
       </conditional>

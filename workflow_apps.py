@@ -371,3 +371,24 @@ def preprocess_images_matlab(angle, src_dir, dst_dir, matlab_bin, matlab_server_
         matlab_daemon_port = matlab_daemon_port,
         internal_ip_controller = internal_ip_controller
     )
+
+
+@parsl_utils.parsl_wrappers.log_app
+@bash_app(executors=['compute_partition'])
+def preprocess_images_cmatlab(angle, src_dir, dst_dir, mcrroot, 
+                             stderr='std.err', stdout='std.out', inputs = []):
+    return '''
+    set -x
+    date
+    mkdir -p {dst_dir}
+    export SRC_DIR={src_dir}
+    export DST_DIR={dst_dir}
+    export ANGLE={angle}
+    export 
+    bash models/matlab_compiled/run_rotate_images.sh {mcrroot}
+    '''.format(
+        angle = angle,
+        src_dir = src_dir,
+        dst_dir = dst_dir,
+        mcrroot = mcrroot
+    )
