@@ -21,7 +21,7 @@
             <option value="python">Python</option>
           </param>
           <when value="matlab">
-            <param name='matlab_bin' label='Path to Matlab Binary' type='text' help='' value='/contrib/__PW_USER__/MATLAB/R2022b/bin/matlab' width='50%_none'>
+            <param name='matlab_bin' label='Path to Matlab Binary' type='text' help='' value='/contrib/MATLAB/R2022b/bin/matlab' width='50%_none'>
             </param>
             <param name='matlab_server_port' label='Matlab Server Port' type='text' help='' value='27010' width='25%'>
             </param>
@@ -29,7 +29,7 @@
             </param>
           </when>
           <when value="matlab_compiled">
-            <param name='mcrroot' label='Path to Matlab Runtime Directory' type='text' help='' value='/contrib/__PW_USER__/MATLAB/MATLAB_Runtime/v912' width='50%_none'>
+            <param name='mcrroot' label='Path to Matlab Runtime Directory' type='text' help='' value='/contrib/MATLAB/MATLAB_Runtime/v912' width='50%_none'>
             </param>
           </when>
       </conditional>
