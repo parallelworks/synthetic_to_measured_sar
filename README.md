@@ -6,3 +6,5 @@ The default parameters in the input form correspond to the default parameters in
 [1] - Nathan Inkawhich, Matthew Inkawhich, Eric Davis, Uttam Majumder, Erin Tripp, Chris Capraro and Yiran Chen, "Bridging a Gap in SAR-ATR: Training on Fully Synthetic and Testing on Measured Data," Preprint (Under Review), 2020.
 
 [2] - Benjamin Lewis, Theresa Scarnati, Elizabeth Sudkamp, John Nehrbass, Stephen Rosencrantz, Edmund Zelnio, "A SAR dataset for ATR development: the Synthetic and Measured Paired Labeled Experiment (SAMPLE)," Proc. SPIE 10987, Algorithms for Synthetic Aperture Radar Imagery XXVI, 109870H (14 May 2019); https://doi.org/10.1117/12.2523460
+
+![synthetic_workflow_dag](https://user-images.githubusercontent.com/28575746/224402560-c0d594a9-40bf-466c-8495-a0ea8d09e379.png)
