@@ -127,7 +127,7 @@ if __name__ == '__main__':
                 LBLSMOOTHING_PARAM = float(pwargs['LBLSMOOTHING_PARAM']),
                 MIXUP_ALPHA = float(pwargs['MIXUP_ALPHA']),
                 dataset_root = [dataset_root, pp_images_out_dir],
-                std = 'std-{}.out'.format(ITER),
+                std = 'train-{}.out'.format(ITER),
                 inputs = pp_futs
             )
         )
