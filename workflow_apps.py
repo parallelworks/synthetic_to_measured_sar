@@ -23,7 +23,10 @@ def prepare_rundir(run_dir, data_repo_dir="./SAMPLE_Public_Dist_A", inputs = [],
 @bash_app(executors=['compute_partition'])
 def mpi_add_noise(np, src_dir, dst_dir, noise_amount, inputs = [], stdout= 'std-noise.out', stderr = 'std-noise.err'):
     return '''
-        mpiexec --oversubscribe -np {np} python models/mpi4py/mpi_add_noise.py {src_dir} {dst_dir} {noise_amount}
+        conda create --name mpi4pi -y
+        conda activate mpi4pi
+        conda install mpi4py pillow -y
+        mpiexec -np {np} python models/mpi4py/mpi_add_noise.py {src_dir} {dst_dir} {noise_amount}
     '''.format(
             np = np,
             src_dir = src_dir,
