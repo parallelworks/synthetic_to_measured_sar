@@ -1,9 +1,8 @@
 #!/bin/bash
-set -x
 
-# Otherwise the submodule is fixed to a given commit...
+# Confirm parsl_utils is cloned
 rm -rf parsl_utils
-#git clone -b dev https://github.com/parallelworks/parsl_utils.git parsl_utils
-git clone https://github.com/parallelworks/parsl_utils.git parsl_utils
-# Cant run a scripts inside parsl_utils directly
-bash parsl_utils/main.sh $@
+git clone -b new-workflow https://github.com/parallelworks/parsl_utils.git parsl_utils
+
+# Run the template
+./parsl_utils/main.sh

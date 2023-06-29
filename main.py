@@ -1,27 +1,21 @@
-import sys, os, json, time
-from random import randint
-import argparse
+import os
 from functools import partial
-
 
 import parsl
 print(parsl.__version__, flush = True)
-from parsl.app.app import python_app, bash_app
-
-import numpy as np
 
 import parsl_utils
-from parsl_utils.config import config, exec_conf, pwargs, job_number
+from parsl_utils.config import config, form_inputs, executor_dict #exec_conf
 from parsl_utils.data_provider import PWFile
 
 
 from workflow_apps import prepare_rundir, mpi_add_noise, train, preprocess_images_python, merge, preprocess_images_matlab, preprocess_images_cmatlab
 
 if __name__ == '__main__':
-    REPEAT_ITERS = int(pwargs['REPEAT_ITERS'])
-    K = float(pwargs['K'])
+    REPEAT_ITERS = int(form_inputs['cnn']['REPEAT_ITERS'])
+    K = float(form_inputs['cnn']['K'])
 
-    data_repo_dir = pwargs['data_repo_dir']
+    data_repo_dir = form_inputs['data']['repo_dir']
     dataset_root = os.path.join(data_repo_dir, "png_images/qpm")
 
     print('Loading Parsl Config', flush = True)
@@ -31,12 +25,11 @@ if __name__ == '__main__':
     print("Preparing Run Directory")
     print("**********************************************************")
     prepare_rundir_fut = prepare_rundir(
-        exec_conf['compute_partition']['RUN_DIR'],
         data_repo_dir = data_repo_dir,
         inputs = [ 
             PWFile(
-                url = 'file://usercontainer/{cwd}/models/'.format(cwd = os.getcwd()),
-                local_path = '{remote_dir}/models'.format(remote_dir =  exec_conf['compute_partition']['RUN_DIR'])
+                url = './models/',
+                local_path = './models/'
             )
         ],
         stdout = 'prepare_rundir_fut.out',
@@ -46,19 +39,19 @@ if __name__ == '__main__':
     print("\n\n**********************************************************")
     print("Preprocessing Images")
     print("**********************************************************")
-    if pwargs['prepro_tool'] == 'matlab':
+    if form_inputs['prepro']['tool'] == 'matlab':
         # FIXME: Generalize internal_ip_controller 
         preprocess_images = partial(
             preprocess_images_matlab,
-            matlab_bin = pwargs['matlab_bin'],
-            matlab_server_port = pwargs['matlab_server_port'],
-            matlab_daemon_port = pwargs['matlab_daemon_port'],
+            matlab_bin = form_inputs['prepro']['matlab_bin'],
+            matlab_server_port = form_inputs['prepro']['matlab_server_port'],
+            matlab_daemon_port = form_inputs['prepro']['matlab_daemon_port'],
             internal_ip_controller = config.executors[0].address
         )
-    elif pwargs['prepro_tool'] == 'matlab_compiled':
+    elif form_inputs['prepro']['tool'] == 'matlab_compiled':
         preprocess_images = partial(
             preprocess_images_cmatlab,
-            mcrroot = pwargs['mcrroot']
+            mcrroot = form_inputs['prepro']['mcrroot']
         )
     else:
         preprocess_images = preprocess_images_python
@@ -77,16 +70,16 @@ if __name__ == '__main__':
         noise_rot_dir = os.path.join(pp_images_out_dir, case)
 
         mpi_fut = mpi_add_noise(
-            pwargs['np'],
+            form_inputs['mpi']['np'],
             src_dir, 
             noise_dir,
-            pwargs['noise_amount'],
+            form_inputs['mpi']['noise_amount'],
             stdout = './std-' + case + '-mpi-noise.out',
             stderr = './std-' + case + '-mpi-noise.err',
             inputs = [prepare_rundir_fut]
         )
         
-        for rot_angle in pwargs['rot_angles'].split('___'):
+        for rot_angle in form_inputs['prepro']['rot_angles'].split('___'):
             pp_fut = preprocess_images(
                 rot_angle, 
                 noise_dir, 
@@ -111,21 +104,21 @@ if __name__ == '__main__':
             train(
                 ITER,
                 K = K,
-                DSIZE = int(pwargs['DSIZE']),
-                num_epochs = int(pwargs['num_epochs']),
-                batch_size = int(pwargs['batch_size']),
-                learning_rate_decay_schedule = [ int(lr) for lr in pwargs['learning_rate_decay_schedule'].split('---') ],
-                learning_rate = float(pwargs['learning_rate']),
-                gamma = float(pwargs['gamma']),
-                weight_decay = float(pwargs['weight_decay']),
-                dropout = float(pwargs['dropout']),
-                gaussian_std = float(pwargs['gaussian_std']),
-                uniform_range = float(pwargs['uniform_range']),
-                simClutter = float(pwargs['simClutter']),
-                flipProb = float(pwargs['flipProb']),
-                degrees = int(pwargs['degrees']),
-                LBLSMOOTHING_PARAM = float(pwargs['LBLSMOOTHING_PARAM']),
-                MIXUP_ALPHA = float(pwargs['MIXUP_ALPHA']),
+                DSIZE = int(form_inputs['np']['DSIZE']),
+                num_epochs = int(form_inputs['np']['num_epochs']),
+                batch_size = int(form_inputs['np']['batch_size']),
+                learning_rate_decay_schedule = [ int(lr) for lr in form_inputs['np']['learning_rate_decay_schedule'].split('---') ],
+                learning_rate = float(form_inputs['np']['learning_rate']),
+                gamma = float(form_inputs['np']['gamma']),
+                weight_decay = float(form_inputs['np']['weight_decay']),
+                dropout = float(form_inputs['np']['dropout']),
+                gaussian_std = float(form_inputs['np']['gaussian_std']),
+                uniform_range = float(form_inputs['np']['uniform_range']),
+                simClutter = float(form_inputs['np']['simClutter']),
+                flipProb = float(form_inputs['np']['flipProb']),
+                degrees = int(form_inputs['np']['degrees']),
+                LBLSMOOTHING_PARAM = float(form_inputs['np']['LBLSMOOTHING_PARAM']),
+                MIXUP_ALPHA = float(form_inputs['np']['MIXUP_ALPHA']),
                 dataset_root = [dataset_root, pp_images_out_dir],
                 std = 'train-{}.out'.format(ITER),
                 inputs = pp_futs
