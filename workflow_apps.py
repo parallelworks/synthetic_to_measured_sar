@@ -7,20 +7,18 @@ import parsl_utils
 # - https://github.com/inkawhich/synthetic-to-measured-sar
 
 @parsl_utils.parsl_wrappers.log_app
-@bash_app(executors=['compute_partition'])
-def prepare_rundir(run_dir, data_repo_dir="./SAMPLE_Public_Dist_A", inputs = [], stdout= 'std.out', stderr = 'std.err'):
+@bash_app(executors=['exec'])
+def prepare_rundir(data_repo_dir="./SAMPLE_Public_Dist_A", inputs = [], stdout= 'std.out', stderr = 'std.err'):
     return '''
-        cd {run_dir}
         if ! [ -d "{data_repo_dir}" ]; then
             git clone https://github.com/benjaminlewis-afrl/SAMPLE_dataset_public {data_repo_dir}
         fi
     '''.format(
-        run_dir = run_dir,
         data_repo_dir = data_repo_dir
     )
 
 @parsl_utils.parsl_wrappers.log_app
-@bash_app(executors=['compute_partition'])
+@bash_app(executors=['exec'])
 def mpi_add_noise(np, src_dir, dst_dir, noise_amount, inputs = [], stdout= 'std-noise.out', stderr = 'std-noise.err'):
     return '''
         mpiexec -np {np} python models/mpi4py/mpi_add_noise.py {src_dir} {dst_dir} {noise_amount}
@@ -41,7 +39,7 @@ def mpi_add_noise(np, src_dir, dst_dir, noise_amount, inputs = [], stdout= 'std-
 #AT_EPS = 4./255.; AT_ALPHA = 1./255. ; AT_ITERS = 7
 #AT_EPS = 8./255.; AT_ALPHA = 2./255. ; AT_ITERS = 7
 @parsl_utils.parsl_wrappers.log_app
-@python_app(executors=['compute_partition'])
+@python_app(executors=['exec'])
 def train(ITER, K=0.0, dataset_root=["./SAMPLE_Public_Dist_A/png_images/qpm"], DSIZE=64, num_epochs=60, batch_size=128,
           learning_rate_decay_schedule=[61], learning_rate=0.001, gamma=0.1, weight_decay=0., dropout=0.4, gaussian_std=0.4,
           uniform_range=0., simClutter=0., flipProb=0., degrees=0, LBLSMOOTHING_PARAM=0.1, MIXUP_ALPHA=0.1, std = 'std.out', inputs = []):
@@ -282,7 +280,7 @@ def train(ITER, K=0.0, dataset_root=["./SAMPLE_Public_Dist_A/png_images/qpm"], D
 
 
 @parsl_utils.parsl_wrappers.log_app
-@python_app(executors=['compute_partition'])
+@python_app(executors=['exec'])
 def merge(K, REPEAT_ITERS, inputs = []):
     import numpy as np
 
@@ -296,7 +294,7 @@ def merge(K, REPEAT_ITERS, inputs = []):
 
 
 @parsl_utils.parsl_wrappers.log_app
-@python_app(executors=['compute_partition'])
+@python_app(executors=['exec'])
 def preprocess_images_python(angle, src_dir, dst_dir, stderr='std.err', stdout='std.out', inputs = []):
     import glob
     import os
@@ -328,7 +326,7 @@ def preprocess_images_python(angle, src_dir, dst_dir, stderr='std.err', stdout='
 # issued=$(cat matlab_license.info  | grep MATLAB  | sed "s/Total/\n/g" | grep issued | awk '{print $2}')
 # in_use=$(cat matlab_license.info  | grep MATLAB  | sed "s/Total/\n/g" | grep use | awk '{print $2}')    
 @parsl_utils.parsl_wrappers.log_app
-@bash_app(executors=['compute_partition'])
+@bash_app(executors=['exec'])
 def preprocess_images_matlab(angle, src_dir, dst_dir, matlab_bin, matlab_server_port, 
                              matlab_daemon_port, internal_ip_controller, 
                              stderr='std.err', stdout='std.out', inputs = []):
@@ -374,7 +372,7 @@ def preprocess_images_matlab(angle, src_dir, dst_dir, matlab_bin, matlab_server_
 
 
 @parsl_utils.parsl_wrappers.log_app
-@bash_app(executors=['compute_partition'])
+@bash_app(executors=['exec'])
 def preprocess_images_cmatlab(angle, src_dir, dst_dir, mcrroot, 
                              stderr='std.err', stdout='std.out', inputs = []):
     return '''
