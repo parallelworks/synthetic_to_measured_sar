@@ -1,5 +1,6 @@
 <tool id='alvaro_synthetic_to_measured_sar' name='alvaro_synthetic_to_measured_sar'>
   <command interpreter='bash'>parsl_wrapper.sh</command>
+  <cancel interpreter='bash'>kill.sh</cancel>
   <inputs>
     <param name='pw_conda_yaml' label='PW Conda YAML Definition File' type='hidden' value='./requirements/parsl-1.2-python-3.6.13.yaml' width='50%_none'></param>
     <param name='pw_conda_dir' label='PW Conda Directory' type='hidden' value='/pw/.miniconda3c' width='50%_none'></param>
