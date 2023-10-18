@@ -73,7 +73,7 @@
       <param name='MIXUP_ALPHA' label='Mixup Alpha' type='text' value='0.1' width='25%'>
       </param>
     </section>
-    <section name='pwrl_exec' type='section' title='Host 1' expanded='true'>
+    <section name='pwrl_exec' type='section' title='Executor' expanded='true'>
       <param name='resource' type='computeResource' label='Service host' hideUserWorkspace='true' help='Resource to host the service'></param>
       <param name='nports' label='Number of Ports to Reserve' type='hidden' value='2' width='50%_none'></param>
       <param name='cores_per_worker' label='Cores per Worker' type='integer' min="1" max="100" help='cores_per_worker parameter for the Parsl HighThroughputExecutor' value='1' width='50%_none'>
