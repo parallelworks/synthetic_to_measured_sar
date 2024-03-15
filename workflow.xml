@@ -75,18 +75,85 @@
       </param>
     </section>
     <section name='pwrl_exec' type='section' title='Executor' expanded='true'>
-      <param name='resource' type='computeResource' label='Service host' hideUserWorkspace='true' help='Resource to host the service'></param>
-      <param name='nports' label='Number of Ports to Reserve' type='hidden' value='2' width='50%_none'></param>
-      <param name='cores_per_worker' label='Cores per Worker' type='integer' min="1" max="100" help='cores_per_worker parameter for the Parsl HighThroughputExecutor' value='1' width='50%_none'>
-      </param>
-      <param name='worker_conda_yaml' label='Worker Conda YAML Definition File' type='hidden' value='./requirements/sar-atr-cpu-parsl.yaml' width='50%_none'></param>
-      <param name='worker_conda_dir' label='Worker Conda Directory' type='hidden' value='/contrib/miniconda' width='50%_none'></param>
-      <param name='worker_conda_env' label='Worker Conda Environment Name' type='hidden' value='sar-atr-cpu-parsl' width='50%_none'></param>
-      <param name='jobschedulertype' label='Select Controller, SLURM Partition or PBS Queue' type='hidden' value='SLURM' width='50%_none'></param>
-      <param name='_parsl_provider_partition' label='SLURM Partition' type='text' help='partition parameter for the Parsl SlurmProvider' value='' width='50%_none'></param>
-      <param name='_parsl_provider_nodes_per_block' label='Nodes per Block' type='integer' min="1" max="10" help='nodes_per_block parameter for the Parsl SlurmProvider' value='1' width='50%_none'></param>
-      <param name='_parsl_provider_walltime' label='Walltime' type='text' help='walltime parameter for the Parsl SlurmProvider' value='01:00:00' width='50%_none'></param>
-      <param name='_parsl_provider_max_blocks' label='Max Blocks' type='integer' min="1" max="10" help='max_blocks parameter for the Parsl SlurmProvider' value='1' width='50%_none'></param>
+      <param 
+        name='resource' 
+        type='computeResource' 
+        label='Service host' 
+        hideUserWorkspace='true' 
+        help='Resource to host the service'
+      ></param>
+      <param 
+        name='nports' 
+        label='Number of Ports to Reserve' 
+        type='hidden' 
+        value='2' 
+      ></param>
+      <param 
+        name='cores_per_worker' 
+        label='Cores per Worker' 
+        type='integer' 
+        min="1" 
+        max="100" 
+        help='cores_per_worker parameter for the Parsl HighThroughputExecutor' 
+        value='1'
+      ></param>
+      <param 
+        name='worker_conda_yaml' 
+        label='Worker Conda YAML Definition File' 
+        type='hidden' 
+        value='./requirements/sar-atr-cpu-parsl.yaml' 
+      ></param>
+      <param 
+        name='worker_conda_dir' 
+        label='Worker Conda Directory' 
+        type='hidden' 
+        value='/contrib/miniconda'
+      ></param>
+      <param 
+        name='worker_conda_env' 
+        label='Worker Conda Environment Name' 
+        type='hidden' 
+        value='sar-atr-cpu-parsl'
+      ></param>
+      <param 
+        name='jobschedulertype' 
+        label='Select Controller, SLURM Partition or PBS Queue' 
+        type='hidden' 
+        value='SLURM'
+      ></param>
+      <param 
+        name='_parsl_provider_partition' 
+        label='SLURM Partition' 
+        type='dynamicPartitionDropdown' 
+        resource='pwrl_exec.resource'
+        help='partition parameter for the Parsl SlurmProvider' 
+        value=''
+      ></param>
+      <param 
+        name='_parsl_provider_nodes_per_block' 
+        label='Nodes per Block' 
+        type='integer' 
+        min="1" 
+        max="10" 
+        help='nodes_per_block parameter for the Parsl SlurmProvider' 
+        value='1'
+      ></param>
+      <param 
+        name='_parsl_provider_walltime' 
+        label='Walltime' 
+        type='text' 
+        help='walltime parameter for the Parsl SlurmProvider' 
+        value='01:00:00' 
+      ></param>
+      <param 
+        name='_parsl_provider_max_blocks' 
+        label='Max Blocks' 
+        type='integer' 
+        min="1" 
+        max="10" 
+        help='max_blocks parameter for the Parsl SlurmProvider' 
+        value='1'
+      ></param>
     </section>
   </inputs>
   <outputs>
